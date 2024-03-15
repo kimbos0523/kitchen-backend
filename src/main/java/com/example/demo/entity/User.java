@@ -20,13 +20,16 @@ public class User implements UserDetails {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
-	private String firstName;
-	private String lastName;
 	@Column(unique = true)
 	private String email;
 	private String password;
-	private String security_qst;
+
+	private String firstName;
+	private String lastName;
+	private String securityQuestion1;
+	private String securityAnswer1;
+	private String securityQuestion2;
+	private String securityAnswer2;
 
 	@Enumerated(EnumType.STRING)
 	private Role role;

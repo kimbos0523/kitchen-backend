@@ -1,62 +1,41 @@
 package com.example.demo.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-
-import com.example.demo.dto.KitchenDTO;
+import com.example.demo.dto.response.KitchenResponse;
 import com.example.demo.entity.Kitchen;
-import com.example.demo.entity.Menu;
 import com.example.demo.mapper.KitchenMapperImpl;
 import com.example.demo.repository.KitchenRepository;
-
-import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-@Service
-@Transactional
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Slf4j
-public class KitchenServiceImpl implements KitchenService{
-	
-	KitchenRepository kitchenRepository;
-	KitchenMapperImpl dtoMapperKitchen;
-	
-	public KitchenServiceImpl(KitchenRepository kitchenRepository, KitchenMapperImpl dtoMapperKitchen){
-        this.kitchenRepository = kitchenRepository;
-        this.dtoMapperKitchen = dtoMapperKitchen;
-    }
+@RequiredArgsConstructor
+@Service
+public class KitchenServiceImpl implements KitchenService {
 
-	@Override
-	public List<KitchenDTO> listKitchens() {
-		List<Kitchen> listKitchens = kitchenRepository.findAll();
-		for(Kitchen k: listKitchens) {
-			System.out.println("kitche: "+k.getName()+" - "+k.getMenuItems().size());
-			for(Menu m: k.getMenuItems()) {
-				System.out.println(m.getName());
-			}
-		}
-        List<KitchenDTO> listKitchenDTOS = new ArrayList<>();
-        for(Kitchen kitchen:listKitchens){
-        	
-        	KitchenDTO kitchenDTO = dtoMapperKitchen.fromKitchen(kitchen);
-            listKitchenDTOS.add(kitchenDTO);
-        }
-        return listKitchenDTOS;
-	}
+    private final KitchenRepository kitchenRepository;
+    private final KitchenMapperImpl dtoMapperKitchen;
 
-	@Override
-	public KitchenDTO saveKitchen(KitchenDTO kitchenDTO) {
-		Kitchen kitchen = dtoMapperKitchen.fromKitchenDTO(kitchenDTO);
-//        employee.setCreatedAt(new Date());
-//        employee.setUpdatedAt(new Date());
+
+    @Override
+    public KitchenResponse saveKitchen(Kitchen kitchen) {
         Kitchen savedKitchen = kitchenRepository.save(kitchen);
         return dtoMapperKitchen.fromKitchen(savedKitchen);
-	}
+    }
 
-	@Override
-	public KitchenDTO getKitchenById(Long kitchenId) {
-		Kitchen kitchen = kitchenRepository.findById(kitchenId).orElseThrow(null);
+    @Override
+    public List<KitchenResponse> getKitchens() {
+        return kitchenRepository.findAll().stream().map(dtoMapperKitchen::fromKitchen).collect(Collectors.toList());
+    }
+
+    @Override
+    public KitchenResponse getKitchenById(Long kitchenId) {
+        Kitchen kitchen = kitchenRepository.findById(kitchenId).orElseThrow(null);
         return dtoMapperKitchen.fromKitchen(kitchen);
-	}
+    }
+
 
 }

@@ -1,8 +1,6 @@
 package com.example.demo.service;
 
-import java.util.Optional;
-
-import com.example.demo.dto.AuthenticationResponse;
+import com.example.demo.dto.response.AuthenticationResponse;
 import com.example.demo.enums.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -10,8 +8,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.dto.LoginDTO;
-import com.example.demo.dto.UserDTO;
+import com.example.demo.dto.request.AuthenticationRequest;
+import com.example.demo.dto.request.UserRequest;
 import com.example.demo.entity.User;
 import com.example.demo.mapper.UserMapperImpl;
 import com.example.demo.repository.UserRepository;
@@ -33,23 +31,21 @@ public class UserServiceImpl implements UserService{
 
     
 	@Override
-	public void register(UserDTO userDTO) {
-        User user = userMapper.fromUserDTO(userDTO);
-        user.setRole(Role.USER);
-        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-
+	public void register(UserRequest userRequest) {
+        User user = userMapper.fromUserRequest(userRequest);
+        user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
         userRepository.save(user);
 	}
 
 	@Override
-	public AuthenticationResponse login(LoginDTO loginDTO) {
+	public AuthenticationResponse login(AuthenticationRequest authenticationRequest) {
 		authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        loginDTO.getEmail(),
-                        loginDTO.getPassword()
+                        authenticationRequest.getEmail(),
+                        authenticationRequest.getPassword()
                 )
         );
-        var user = userRepository.findByEmail(loginDTO.getEmail())
+        var user = userRepository.findByEmail(authenticationRequest.getEmail())
                 .orElseThrow();
         var jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder()

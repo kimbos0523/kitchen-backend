@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.example.demo.enums.FoodType;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -38,6 +39,7 @@ public class Menu {
 	
 	@ManyToOne
     @JoinColumn(name = "kitchen_id", nullable = false)
+	@JsonIgnore
     private Kitchen kitchen;
 
 }

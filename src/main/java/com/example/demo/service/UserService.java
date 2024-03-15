@@ -1,14 +1,13 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.AuthenticationResponse;
-import com.example.demo.dto.LoginDTO;
-import com.example.demo.dto.UserDTO;
-import com.example.demo.entity.User;
+import com.example.demo.dto.response.AuthenticationResponse;
+import com.example.demo.dto.request.AuthenticationRequest;
+import com.example.demo.dto.request.UserRequest;
 
 public interface UserService {
-	public void register(UserDTO userDTO);
+	public void register(UserRequest userRequest);
 
-    public AuthenticationResponse login(LoginDTO loginDTO);
+    public AuthenticationResponse login(AuthenticationRequest authenticationRequest);
 
     //public Optional<User> findByUsername(String username);
 

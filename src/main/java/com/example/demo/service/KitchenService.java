@@ -2,12 +2,12 @@ package com.example.demo.service;
 
 import java.util.List;
 
-import com.example.demo.dto.KitchenDTO;
+import com.example.demo.dto.response.KitchenResponse;
+import com.example.demo.entity.Kitchen;
 
 public interface KitchenService {
-	
-	public List<KitchenDTO> listKitchens();
-	KitchenDTO saveKitchen(KitchenDTO kitchenDTO);
-	KitchenDTO getKitchenById(Long kitchenId);
 
+	KitchenResponse saveKitchen(Kitchen kitchen);
+    List<KitchenResponse> getKitchens();
+	KitchenResponse getKitchenById(Long kitchenId);
 }
